@@ -13,8 +13,8 @@ services:
       - /bin/sh
       - -c
       - |
-        python src/bot/main.py &
         export PYTHONPATH="$PYTHONPATH:/app"
+        python src/bot/main.py &
         cd src/tasks
         celery -A task beat --loglevel=info &
         celery -A task worker --loglevel=info
