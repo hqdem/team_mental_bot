@@ -1,0 +1,4 @@
+bot:
+  token: 6727451365:AAG3iwdLLeHNYci5ofypszn8O58gqudP8FE
+api:
+  base-url: "http://team_mental_api:8080"

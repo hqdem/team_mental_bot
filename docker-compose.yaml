@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+  bot:
+    build: .
+    container_name: team_mental_bot
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    restart: on-failure
+    command:
+      - /bin/sh
+      - -c
+      - |
+        python src/bot/main.py &
+        export PYTHONPATH="$PYTHONPATH:/app"
+        cd src/tasks
+        celery -A task beat --loglevel=info &
+        celery -A task worker --loglevel=info
+    depends_on:
+      - redis
+    networks:
+      - mental_bot_app
+      - bot_net
+  redis:
+    image: redis:latest
+    restart: on-failure
+    environment:
+      - REDIS_PORT=6379
+    networks:
+      - mental_bot_app
+      - bot_net
+
+volumes:
+  app:
+networks:
+  mental_bot_app:
+    external: true
+  bot_net:
+    driver: bridge
